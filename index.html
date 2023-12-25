@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>String Encryption</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 50px;
+        }
+        label {
+            margin-bottom: 10px;
+        }
+        #inputBox {
+            width: 300px;
+            padding: 8px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>String Encryption</h1>
+
+<label for="inputBox">Enter String:</label>
+<input type="text" id="inputBox">
+
+<div id="result">
+    <p><strong>Encrypted String:</strong> <span id="encryptedString"></span></p>
+    <p><strong>Decrypted String:</strong> <span id="decryptedString"></span></p>
+</div>
+
+<div>
+    <button onclick="encryptString()">Encrypt</button>
+    <button onclick="decryptString()">Decrypt</button>
+</div>
+
+<script>
+    function shiftCharacter(char, shift) {
+        if (char.match(/[A-Za-z]/)) {
+            const base = char === char.toUpperCase() ? 'A'.charCodeAt(0) : 'a'.charCodeAt(0);
+            return String.fromCharCode(((char.charCodeAt(0) - base + shift) + 26) % 26 + base);
+        } else if (char.match(/[0-9]/)) {
+            const num = parseInt(char, 10);
+            return num < 5 ? (num + 5).toString() : (num - 5).toString();
+        } else {
+            return char;
+        }
+    }
+
+    function shiftString(inputStr, charShift, numShift) {
+        return inputStr.split('').map(char => shiftCharacter(char, charShift)).join('');
+    }
+
+    function encryptString() {
+        const inputBox = document.getElementById('inputBox');
+        const originalString = inputBox.value;
+        const charShift = 4;
+        const numShift = 5;
+
+        const encryptedString = shiftString(originalString, charShift, numShift);
+
+        document.getElementById('encryptedString').textContent = encryptedString;
+        document.getElementById('decryptedString').textContent = '';
+    }
+
+    function decryptCharacter(char, charShift, numShift) {
+        if (char.match(/[A-Za-z]/)) {
+            const base = char === char.toUpperCase() ? 'A'.charCodeAt(0) : 'a'.charCodeAt(0);
+            return String.fromCharCode(((char.charCodeAt(0) - base - charShift) + 26) % 26 + base);
+        } else if (char.match(/[0-9]/)) {
+            const num = parseInt(char, 10);
+            if (num < 5) {
+                return (num + 5).toString();
+            } else {
+                return (num - 5).toString();
+            }
+        } else {
+            return char;
+        }
+    }
+
+    function decryptString() {
+        const inputBox = document.getElementById('inputBox');
+        const encryptedString = inputBox.value;
+        const charShift = 4;
+        const numShift = 5;
+
+        const decryptedString = encryptedString.split('').map(char => decryptCharacter(char, charShift, numShift)).join('');
+
+        document.getElementById('decryptedString').textContent = decryptedString;
+        document.getElementById('encryptedString').textContent = '';
+    }
+</script>
+
+</body>
+</html>
